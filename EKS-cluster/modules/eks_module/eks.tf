@@ -133,8 +133,8 @@ resource "aws_eks_cluster" "eks_cluster" {
         endpoint_public_access = true
     }
     access_config {
-        # authentication_mode = "API_AND_CONFIG_MAP" # both old way & new way for authentication ( iam user- and her create rbac for you ,rbac only)
-        authentication_mode = "API"
+        authentication_mode = "API_AND_CONFIG_MAP" # both old way & new way for authentication ( iam user- and her create rbac for you ,rbac only)
+        # authentication_mode = "API"
     }
 
     enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]

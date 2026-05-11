@@ -21,6 +21,7 @@ module "eks" {
     node_groups = var.node_groups
     private_subnet_ids_list = module.cluster-vpc.NM_private_subnet_ids
 
+    depends_on = [ module.cluster-vpc]
 }
 
 module "IRSA" {
@@ -32,6 +33,14 @@ module "IRSA" {
   serviceaccount_name_alb_ingress = "aws-load-balancer-controller-sa"
   serviceaccount_name_external_dns = "external-dns-sa"
   serviceaccount_name_external_secrets = "external-secrets-sa"
+  depends_on = [ module.eks ]
+}
+
+
+module "access-to-cluster" {
+ source = "./modules/IAM_user_access_cluster_module"
+ names_of_users_cluster_admins = var.names_of_users_cluster_admins
+  depends_on = [ module.eks ]
 }
 
 module "Helm-ebs-csi" {
@@ -40,6 +49,8 @@ source = "./modules/Helm_addons_module/EBS_csi_driver_module"
 # serviceaccount_name_ebs_csi = module.IRSA.serviceaccount_name_ebs_csi
 serviceaccount_name_ebs_csi = "ebs-csi-controller-sa"
 ebs_csi_IRSA_arn = module.IRSA.ebs_csi_IRSA_arn
+
+depends_on = [ module.access-to-cluster ]
 
 }
 
@@ -52,6 +63,7 @@ module "helm-alb" {
   cluster_name = var.cluster_name
   region = var.region
   vpc_id = module.cluster-vpc.NM_vpc_id
+  depends_on = [ module.access-to-cluster ]
 }
 
 module "helm-external-dns-operator" {
@@ -60,7 +72,7 @@ module "helm-external-dns-operator" {
   cluster_name = var.cluster_name
   serviceaccount_name_external_dns = "external-dns-sa"
   external_dns_IRSA_arn = module.IRSA.external_dns_IRSA_arn
-
+depends_on = [ module.access-to-cluster ]
   
 }
 
@@ -68,14 +80,12 @@ module "helm-external-secret-operator" {
   source = "./modules/Helm_addons_module/External_secret_operator_module"
   external_secrets_service_account_name = "external-secrets-sa"
   external_secrets_IRSA_arn = module.IRSA.external_secrets_IRSA_arn
+  depends_on = [ module.access-to-cluster ]
 }
 
-module "access-to-cluster" {
- source = "./modules/IAM_user_access_cluster_module"
- names_of_users_cluster_admins = var.names_of_users_cluster_admins
-}
 
 module "create_namespaces" {
   source = "./modules/cluster-namespaces_module"
   # cluster_name = var.cluster_name
+  depends_on = [ module.access-to-cluster ]
 }
