@@ -1,3 +1,8 @@
 aws-labs/.terraform
 aws-labs/.terraform/*
 aws-labs/key-private*
+
+EKS-cluster/.terraform
+EKS-cluster/.terraform/*
+EKS-cluster/terraform.tfstate
+EKS-cluster/terraform.tfstate.backup
