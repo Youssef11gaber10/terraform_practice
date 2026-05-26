@@ -54,3 +54,9 @@ variable "names_of_users_cluster_admins" {
       cluster_name = string
   }))
 }
+
+
+variable "grafana_admin_password" {
+  type = string
+  sensitive = true
+}

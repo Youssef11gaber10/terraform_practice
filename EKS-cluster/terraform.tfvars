@@ -52,7 +52,8 @@ node_groups = {
   # i made one node group for general workloads but you can make multiple node groups
   # On-demand for critical workloads
   general = {
-    instance_types = ["t3.medium"]
+    # instance_types = ["t3.medium"]
+    instance_types = ["c7i-flex.large"]
     capacity_type  = "ON_DEMAND"
     desired_size   = 2
     min_size       = 1
@@ -105,14 +106,16 @@ node_groups = {
 names_of_users_cluster_admins = [ 
   {
   user_name = "youssef"
-  user_account_id = "684854030943"
+  user_account_id = "767196576807"
   cluster_name = "youssef-cluster"
 },
 {
   user_name = "gitlab-deployer"
-  user_account_id = "684854030943"
+  user_account_id = "767196576807"
   cluster_name = "youssef-cluster"
 }
 ]   
 
+
+grafana_admin_password="admin"
 
